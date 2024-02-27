@@ -10,15 +10,16 @@ class Nematic_Liquid_Crystal():
          in nematic liquid crystals confined in thin films with 
          periodic-planar surfaces'''    
 
-    def __init__(self,top_layer_bc, bottom_layer_bc, size, K1,K2, K3 ):
+    def __init__(self,top_layer_bc, bottom_layer_bc, size, K1,K2, K3,grating_length ):
 
         ''' Generate the initial boundary conditions and intialize the lattice '''
         self.Nx = size[0]
         self.Ny = size[1]
         self.Nz = size[2]
-
-        top_boundary = 
-        bottom_boundary = 
+        x = np.linspace(0,grating_length,self.Nx)
+        # declare your boundary conditions here: Default is the problem setup for Sasaki et al
+        top_boundary = np.pi/2*np.ones()
+        bottom_boundary = np.repeat(np.pi*x/grating_length
         #For molecules rotationally free 
         config = np.random.rand(self.Nx,self.Ny,self.Nz)
 
