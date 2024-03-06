@@ -4,7 +4,7 @@ import numpy as np
 from numpy.random import rand
 import matplotlib.pyplot as plt
 
-
+p2 = lambda theta: 1.5*theta**2-0.5
 class Nematic_Liquid_Crystal():
     ''' Code adaptation of the paper Stable disclination lines
          in nematic liquid crystals confined in thin films with 
@@ -18,25 +18,35 @@ class Nematic_Liquid_Crystal():
         self.Nz = size[2]
         x = np.linspace(0,grating_length,self.Nx)
         # declare your boundary conditions here: Default is the problem setup for Sasaki et al
-        top_boundary = np.pi/2*np.ones()
-        bottom_boundary = np.repeat(np.pi*x/grating_length
-        #For molecules rotationally free 
-        config = np.random.rand(self.Nx,self.Ny,self.Nz)
+        #top_boundary = np.pi/2*np.ones((self.Nz,self.Nx))
+        #bottom_boundary = np.repeat([np.pi*x/grating_length],axis=0)
 
-
+        self.top_boundary = top_layer_bc
+        self.bottom_boundary = bottom_layer_bc
+        #For molecules rotationally free all aligned with x axis 
+        self.config = np.zeros((self.Nz,self.Nx,self.Ny,3)) # The configuration is in the following order [z_axis,x_axis,y_axis,dof]
+        # Twist, Bend, Splay constants
+        self.Ks = np.array([K1,K2,K3])
        
         
-    
+    def calculate_energy(self,config):
+        phix,phiy,phiz = config
+
     ## monte carlo moves
     def mcmove(self, config, N, beta):
         ''' This is to execute the monte carlo moves using 
         Metropolis algorithm such that detailed
         balance condition is satisified'''
-        for i in range(N):
-            for j in range(N):            
-                    a = np.random.randint(0, N)
-                    b = np.random.randint(0, N)
-                    s =  config[a, b]
+        for i in range(self.Nz):
+            for j in range(self.Nx):
+                    # Randomly select a lattice point           
+                    a = np.random.randint(0, self.Nz)
+                    b = np.random.randint(0, self.Nx)
+                    c = np.random.randint(0, self.Ny)
+                    # Calculate the energy of the current configuration
+                    
+                    # Rotata the molecule randomly 
+                    s =  config[a, b,c,:]
                     nb = config[(a+1)%N,b] + config[a,(b+1)%N] + config[(a-1)%N,b] + config[a,(b-1)%N]
                     cost = 2*s*nb
                     if cost < 0:	
